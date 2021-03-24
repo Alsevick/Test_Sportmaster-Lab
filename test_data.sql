@@ -1,20 +1,15 @@
---truncate table SERVICES;
---truncate table students;
 
-select * from SERVICES;
-
-select * from students;
-
-select * from Courses;
 
 declare
 IDD    INTEGER;
+cnt number;
 erro_code number;
 error_text varchar2(100);
 rez number;
 BEGIN
-/*
+
 -- Создаем 4 сервиса
+
 dbms_output.put_line( API.UPSET_SERVICE(3,'Сервис 3', 3,erro_code,error_text));
 dbms_output.put_line(erro_code||' '||error_text);
 dbms_output.put_line( API.UPSET_SERVICE(null,'Сервис 1', 1,erro_code,error_text));
@@ -26,19 +21,20 @@ dbms_output.put_line( API.UPSET_SERVICE(IDD,'Сервис 44', 5,erro_code,error_text)
 
 
 -- Заводим 4 ученика
-
-dbms_output.put_line(API.UPSET_STUDENT (null,'Иван','Иванович','Иванов',1,erro_code,error_text));
+--Получаем количество сервисов. Нужно для рандома
+select count(*)+1 into cnt  from services;
+dbms_output.put_line(API.UPSET_STUDENT (null,'Иван','Иванович','Иванов',trunc(dbms_random.value(1,cnt)),erro_code,error_text));
 dbms_output.put_line(erro_code||' '||error_text);
-dbms_output.put_line(API.UPSET_STUDENT (null,'Петр','Петрович','Петров',3,erro_code,error_text));
+dbms_output.put_line(API.UPSET_STUDENT (null,'Петр','Петрович','Петров',trunc(dbms_random.value(1,cnt)),erro_code,error_text));
 dbms_output.put_line(erro_code||' '||error_text);
-dbms_output.put_line(API.UPSET_STUDENT (null,'Федор','Петровчи','Федоров',2,erro_code,error_text));
+dbms_output.put_line(API.UPSET_STUDENT (null,'Федор','Петровчи','Федоров',trunc(dbms_random.value(1,cnt)),erro_code,error_text));
 dbms_output.put_line(erro_code||' '||error_text);
-dbms_output.put_line(API.UPSET_STUDENT (null,'Иван',null,'Сидоров',4,erro_code,error_text));
+dbms_output.put_line(API.UPSET_STUDENT (null,'Иван',null,'Сидоров',trunc(dbms_random.value(1,cnt)),erro_code,error_text));
 dbms_output.put_line(erro_code||' '||error_text);
---Добавляем отчество последнему
+--Добавляем отчество последнему и убираем сервис
 SELECT MAX(STUDENT_ID)INTO IDD FROM STUDENTS;
 dbms_output.put_line(API.UPSET_STUDENT (idd,'Иван','Федорович','Сидоров',null,erro_code,error_text));
-*/
+
 -- заводим 4 курса
 dbms_output.put_line(API.UPSET_COURSE(
                       P_COURSE_NAME => 'Подготовка к ЕГЭ 11 Класс',

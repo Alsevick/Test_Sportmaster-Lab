@@ -1,8 +1,9 @@
+/*
 drop table Students ;
 drop table Services ;
 drop table Courses;
 drop table schedule;
-
+*/
 -- таблица сервисов
 CREATE TABLE Services (
 service_id      INTEGER generated always as IDENTITY,
