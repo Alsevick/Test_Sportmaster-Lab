@@ -1,4 +1,16 @@
+drop table Students ;
+drop table Services ;
+drop table Courses;
+drop table schedule;
 
+-- таблица сервисов
+CREATE TABLE Services (
+service_id      INTEGER generated always as IDENTITY,
+service_name    VARCHAR2(100),
+cn_day_of_com   INTEGER,
+CONSTRAINT service_pk PRIMARY KEY (service_id )
+);
+/
 --Таблица учеников
 CREATE TABLE Students (
 student_ID INTEGER  generated always as IDENTITY ,
@@ -11,14 +23,6 @@ CONSTRAINT Student_pk PRIMARY KEY (student_ID),
 CONSTRAINT fk_Services
     FOREIGN KEY (SERVICE_ID)
     REFERENCES Services(SERVICE_ID)
-);
-/
--- таблица сервисов
-CREATE TABLE Services (
-service_id      INTEGER generated always as IDENTITY,
-service_name    VARCHAR2(100),
-cn_day_of_com   INTEGER,
-CONSTRAINT service_pk PRIMARY KEY (service_id )
 );
 /
 -- Таблица курсов
@@ -41,11 +45,9 @@ CONSTRAINT cos_pk PRIMARY KEY (cos_id)
 CREATE TABLE schedule (
 dat    date not null,
 student_ID INTEGER not null ,
-service_id INTEGER not null
+course_id INTEGER not null
 );
 /
 CREATE INDEX schedule_dat on schedule (dat);
-
-
 
 
