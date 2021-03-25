@@ -34,13 +34,7 @@ Course_cost  NUMBER(10,2),
 CONSTRAINT Course_pk PRIMARY KEY (course_id)
 );
 /
-/*-- Таблица связи Студент-Курс
-CREATE TABLE Course_of_student(
-cos_id INTEGER generated always as IDENTITY,
-student_ID INTEGER,
-service_id INTEGER,
-CONSTRAINT cos_pk PRIMARY KEY (cos_id)
-);--*/
+
 
 --Расписание
 CREATE TABLE schedule (
