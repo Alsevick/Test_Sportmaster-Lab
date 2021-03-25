@@ -1,9 +1,9 @@
 CREATE OR REPLACE PACKAGE PROFIT AS
---Получение суммы причающейся Сервисам
+--РџРѕР»СѓС‡РµРЅРёРµ СЃСѓРјРјС‹ РїСЂРёС‡Р°СЋС‰РµР№СЃСЏ РЎРµСЂРІРёСЃР°Рј
 function get_profit_serv  return number;
---Получение суммы "грязного" дохода
+--РџРѕР»СѓС‡РµРЅРёРµ СЃСѓРјРјС‹ "РіСЂСЏР·РЅРѕРіРѕ" РґРѕС…РѕРґР°
 function get_my_dirty_profit return number;
---Сумма налога
+--РЎСѓРјРјР° РЅР°Р»РѕРіР°
 function get_prc_tax return number;
 --
 function get_my_clean_profit return number;
@@ -16,7 +16,7 @@ AS
     st_sum   number :=0;
     rez_sum number :=0;
     begin
-    --Цикл по студентам пришедших с сервиса
+    --Р¦РёРєР» РїРѕ СЃС‚СѓРґРµРЅС‚Р°Рј РїСЂРёС€РµРґС€РёС… СЃ СЃРµСЂРІРёСЃР°
     for student in (select students.STUDENT_ID,SERVICES.CN_DAY_OF_COM cn from students inner join SERVICES on students.SERVICE_ID = SERVICES.SERVICE_ID)
     loop
         select sum (COURSE_COST) into st_sum from ( 

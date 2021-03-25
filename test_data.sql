@@ -8,61 +8,61 @@ error_text varchar2(100);
 rez number;
 BEGIN
 
--- Создаем 4 сервиса
+-- РЎРѕР·РґР°РµРј 4 СЃРµСЂРІРёСЃР°
 
-dbms_output.put_line( API.UPSET_SERVICE(3,'Сервис 3', 3,erro_code,error_text));
+dbms_output.put_line( API.UPSET_SERVICE(3,'РЎРµСЂРІРёСЃ 3', 3,erro_code,error_text));
 dbms_output.put_line(erro_code||' '||error_text);
-dbms_output.put_line( API.UPSET_SERVICE(null,'Сервис 1', 1,erro_code,error_text));
-dbms_output.put_line( API.UPSET_SERVICE(null,'Сервис 2', 2,erro_code,error_text));
-dbms_output.put_line( API.UPSET_SERVICE(null,'Сервис 4', 4,erro_code,error_text));
---Меняем название и оплату ПОСЛЕДНЕНГО сервиса
+dbms_output.put_line( API.UPSET_SERVICE(null,'РЎРµСЂРІРёСЃ 1', 1,erro_code,error_text));
+dbms_output.put_line( API.UPSET_SERVICE(null,'РЎРµСЂРІРёСЃ 2', 2,erro_code,error_text));
+dbms_output.put_line( API.UPSET_SERVICE(null,'РЎРµСЂРІРёСЃ 4', 4,erro_code,error_text));
+--РњРµРЅСЏРµРј РЅР°Р·РІР°РЅРёРµ Рё РѕРїР»Р°С‚Сѓ РџРћРЎР›Р•Р”РќР•РќР“Рћ СЃРµСЂРІРёСЃР°
 SELECT MAX(SERVICE_ID)INTO IDD FROM SERVICES;
-dbms_output.put_line( API.UPSET_SERVICE(IDD,'Сервис 44', 5,erro_code,error_text));
+dbms_output.put_line( API.UPSET_SERVICE(IDD,'РЎРµСЂРІРёСЃ 44', 5,erro_code,error_text));
 
 
--- Заводим 4 ученика
---Получаем количество сервисов. Нужно для рандома
+-- Р—Р°РІРѕРґРёРј 4 СѓС‡РµРЅРёРєР°
+--РџРѕР»СѓС‡Р°РµРј РєРѕР»РёС‡РµСЃС‚РІРѕ СЃРµСЂРІРёСЃРѕРІ. РќСѓР¶РЅРѕ РґР»СЏ СЂР°РЅРґРѕРјР°
 select count(*)+1 into cnt  from services;
-dbms_output.put_line(API.UPSET_STUDENT (null,'Иван','Иванович','Иванов',trunc(dbms_random.value(1,cnt)),erro_code,error_text));
+dbms_output.put_line(API.UPSET_STUDENT (null,'РРІР°РЅ','РРІР°РЅРѕРІРёС‡','РРІР°РЅРѕРІ',trunc(dbms_random.value(1,cnt)),erro_code,error_text));
 dbms_output.put_line(erro_code||' '||error_text);
-dbms_output.put_line(API.UPSET_STUDENT (null,'Петр','Петрович','Петров',trunc(dbms_random.value(1,cnt)),erro_code,error_text));
+dbms_output.put_line(API.UPSET_STUDENT (null,'РџРµС‚СЂ','РџРµС‚СЂРѕРІРёС‡','РџРµС‚СЂРѕРІ',trunc(dbms_random.value(1,cnt)),erro_code,error_text));
 dbms_output.put_line(erro_code||' '||error_text);
-dbms_output.put_line(API.UPSET_STUDENT (null,'Федор','Петровчи','Федоров',trunc(dbms_random.value(1,cnt)),erro_code,error_text));
+dbms_output.put_line(API.UPSET_STUDENT (null,'Р¤РµРґРѕСЂ','РџРµС‚СЂРѕРІС‡Рё','Р¤РµРґРѕСЂРѕРІ',trunc(dbms_random.value(1,cnt)),erro_code,error_text));
 dbms_output.put_line(erro_code||' '||error_text);
-dbms_output.put_line(API.UPSET_STUDENT (null,'Иван',null,'Сидоров',trunc(dbms_random.value(1,cnt)),erro_code,error_text));
+dbms_output.put_line(API.UPSET_STUDENT (null,'РРІР°РЅ',null,'РЎРёРґРѕСЂРѕРІ',trunc(dbms_random.value(1,cnt)),erro_code,error_text));
 dbms_output.put_line(erro_code||' '||error_text);
---Добавляем отчество последнему и убираем сервис
+--Р”РѕР±Р°РІР»СЏРµРј РѕС‚С‡РµСЃС‚РІРѕ РїРѕСЃР»РµРґРЅРµРјСѓ Рё СѓР±РёСЂР°РµРј СЃРµСЂРІРёСЃ
 SELECT MAX(STUDENT_ID)INTO IDD FROM STUDENTS;
-dbms_output.put_line(API.UPSET_STUDENT (idd,'Иван','Федорович','Сидоров',null,erro_code,error_text));
+dbms_output.put_line(API.UPSET_STUDENT (idd,'РРІР°РЅ','Р¤РµРґРѕСЂРѕРІРёС‡','РЎРёРґРѕСЂРѕРІ',null,erro_code,error_text));
 
--- заводим 4 курса
+-- Р·Р°РІРѕРґРёРј 4 РєСѓСЂСЃР°
 dbms_output.put_line(API.UPSET_COURSE(
-                      P_COURSE_NAME => 'Подготовка к ЕГЭ 11 Класс',
+                      P_COURSE_NAME => 'РџРѕРґРіРѕС‚РѕРІРєР° Рє Р•Р“Р­ 11 РљР»Р°СЃСЃ',
                       p_Course_cost => 2000,
                       error_code => erro_code, 
                       error_text => error_text
 ));
 dbms_output.put_line(API.UPSET_COURSE(
-                      P_COURSE_NAME => 'Подготовка к ГИА 9 Класс',
+                      P_COURSE_NAME => 'РџРѕРґРіРѕС‚РѕРІРєР° Рє Р“РРђ 9 РљР»Р°СЃСЃ',
                       p_Course_cost => 1500,
                       error_code => erro_code, 
                       error_text => error_text
 ));
 dbms_output.put_line(API.UPSET_COURSE(
-                      P_COURSE_NAME => 'Подготовка к ЕГЭ 11 Класс Интенсив',
+                      P_COURSE_NAME => 'РџРѕРґРіРѕС‚РѕРІРєР° Рє Р•Р“Р­ 11 РљР»Р°СЃСЃ РРЅС‚РµРЅСЃРёРІ',
                       p_Course_cost => 2500,
                       error_code => erro_code, 
                       error_text => error_text
 ));
 dbms_output.put_line(API.UPSET_COURSE(
-                      P_COURSE_NAME => 'Алгебра 8 класс',
+                      P_COURSE_NAME => 'РђР»РіРµР±СЂР° 8 РєР»Р°СЃСЃ',
                       p_Course_cost => 1700,
                       error_code => erro_code, 
                       error_text => error_text
 ));
 --*/
---Составляем расписание на неделю
--- Расписание рандомное. Наш репетитор работает без обеда.
+--РЎРѕСЃС‚Р°РІР»СЏРµРј СЂР°СЃРїРёСЃР°РЅРёРµ РЅР° РЅРµРґРµР»СЋ
+-- Р Р°СЃРїРёСЃР°РЅРёРµ СЂР°РЅРґРѕРјРЅРѕРµ. РќР°С€ СЂРµРїРµС‚РёС‚РѕСЂ СЂР°Р±РѕС‚Р°РµС‚ Р±РµР· РѕР±РµРґР°.
 declare
 id_st integer;
 id_cors integer;
