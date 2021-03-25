@@ -1,27 +1,27 @@
 -- API
 CREATE OR REPLACE PACKAGE API AS
--- Заведение сервиса
+-- Р—Р°РІРµРґРµРЅРёРµ СЃРµСЂРІРёСЃР°
 FUNCTION UPSET_SERVICE (p_service_id INTEGER default null,p_name_service VARCHAR2,p_day_com INTEGER default 0,  error_code out NUMBER,  error_text OUT VARCHAR2 ) RETURN NUMBER;
--- Удаление сервиса
+-- РЈРґР°Р»РµРЅРёРµ СЃРµСЂРІРёСЃР°
 FUNCTION DEL_SERVICE (p_service_id INTEGER,  error_code out number,  error_text OUT VARCHAR2 ) RETURN NUMBER;
 
 
--- Заведение ученика
+-- Р—Р°РІРµРґРµРЅРёРµ СѓС‡РµРЅРёРєР°
 FUNCTION UPSET_STUDENT(p_student_id integer default null,p_first_name VARCHAR2,p_last_name VARCHAR2,p_surname VARCHAR2,p_SERVICE_ID INTEGER default null,  error_code OUT number,  error_text OUT VARCHAR2 ) RETURN NUMBER;
--- Удаление ученика
+-- РЈРґР°Р»РµРЅРёРµ СѓС‡РµРЅРёРєР°
 FUNCTION DEL_STUDENT (p_student_id integer,  error_code out number,  error_text out VARCHAR2 ) RETURN NUMBER;
 
 -- 
 
--- Заведение курса
+-- Р—Р°РІРµРґРµРЅРёРµ РєСѓСЂСЃР°
 FUNCTION UPSET_COURSE(p_course_id integer DEFAULT NULL,p_course_name VARCHAR2,p_Course_cost number, error_code out number, error_text OUT  VARCHAR2 ) RETURN NUMBER;
--- Удаление курса
+-- РЈРґР°Р»РµРЅРёРµ РєСѓСЂСЃР°
 FUNCTION DEL_COURSE (p_course_id integer, error_code out number,  error_text OUT VARCHAR2 ) RETURN NUMBER;
 
 --
--- Заведение занятия в расписании
+-- Р—Р°РІРµРґРµРЅРёРµ Р·Р°РЅСЏС‚РёСЏ РІ СЂР°СЃРїРёСЃР°РЅРёРё
 FUNCTION UPSET_SHEDULE(p_date date default null,p_student_id integer,p_course_id integer,  error_code OUT number,  error_text OUT VARCHAR2 ) RETURN NUMBER;
--- Удаление курса
+-- РЈРґР°Р»РµРЅРёРµ РєСѓСЂСЃР°
 FUNCTION DEL_SHEDULE (p_date date, error_code out number,  error_text  OUT VARCHAR2 ) RETURN NUMBER;
 
 END;
@@ -31,15 +31,15 @@ CREATE OR REPLACE PACKAGE BODY API AS
   FUNCTION UPSET_SERVICE (p_service_id INTEGER default null,p_name_service VARCHAR2,p_day_com INTEGER default 0,  error_code out NUMBER,  error_text OUT VARCHAR2 ) RETURN NUMBER
   IS
     cn_service number;
-    type_work  VARCHAR2(10);   --Тип работы функции insert/update
+    type_work  VARCHAR2(10);   --РўРёРї СЂР°Р±РѕС‚С‹ С„СѓРЅРєС†РёРё insert/update
     erro_code VARCHAR2(2000);
     EMPTY_NAME_SERVICE EXCEPTION;
     ERROR_WRITE EXCEPTION;
     ERROR_UPDATE EXCEPTION;
   BEGIN
-  --блок проверок входящий параметров
+  --Р±Р»РѕРє РїСЂРѕРІРµСЂРѕРє РІС…РѕРґСЏС‰РёР№ РїР°СЂР°РјРµС‚СЂРѕРІ
     IF p_name_service IS NULL THEN RAISE EMPTY_NAME_SERVICE; END IF;
-  -- ОСНОВНОЙ ФУНКЦИОНАЛ
+  -- РћРЎРќРћР’РќРћР™ Р¤РЈРќРљР¦РРћРќРђР›
       IF p_service_id  IS NULL 
           THEN type_work := 'INSERT';
           ELSE SELECT COUNT(*) INTO cn_service FROM SERVICES WHERE SERVICE_ID = p_service_id;
@@ -51,7 +51,7 @@ CREATE OR REPLACE PACKAGE BODY API AS
   
       IF type_work = 'INSERT' 
         THEN
-            -- запись
+            -- Р·Р°РїРёСЃСЊ
               BEGIN
                 INSERT INTO Services (service_name,cn_day_of_com) VALUES (p_name_service,p_day_com);
                 COMMIT;
@@ -69,19 +69,19 @@ CREATE OR REPLACE PACKAGE BODY API AS
     RETURN 1;
   EXCEPTION WHEN EMPTY_NAME_SERVICE 
               THEN error_code := 1;
-                   error_text := 'Название сервиса обязательно для заполнения';
+                   error_text := 'РќР°Р·РІР°РЅРёРµ СЃРµСЂРІРёСЃР° РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ';
                    return -1;
              WHEN ERROR_WRITE
               THEN error_code := 1;
-                   error_text := 'Ошибка записи данных '||erro_code;
+                   error_text := 'РћС€РёР±РєР° Р·Р°РїРёСЃРё РґР°РЅРЅС‹С… '||erro_code;
                    return -1;
              WHEN ERROR_UPDATE
               THEN error_code := 1;
-                   error_text := 'Ошибка обновления данных '||sqlerrm;
+                   error_text := 'РћС€РёР±РєР° РѕР±РЅРѕРІР»РµРЅРёСЏ РґР°РЅРЅС‹С… '||sqlerrm;
                    return -1;        
              WHEN OTHERS 
               THEN error_code := 2;
-                   error_text := 'Ошибка '||sqlerrm;
+                   error_text := 'РћС€РёР±РєР° '||sqlerrm;
                    return -1;
   END;
   
@@ -90,36 +90,36 @@ CREATE OR REPLACE PACKAGE BODY API AS
   cn_service number;
   NO_SERVICE_ID EXCEPTION;
   BEGIN
-    --блок проверок
+    --Р±Р»РѕРє РїСЂРѕРІРµСЂРѕРє
     SELECT count(*) into cn_service FROM services where service_id = p_service_id;
     IF cn_service = 0 then RAISE NO_SERVICE_ID; END IF;
-    -- Основной функционал
+    -- РћСЃРЅРѕРІРЅРѕР№ С„СѓРЅРєС†РёРѕРЅР°Р»
     DELETE FROM SERVICES WHERE  service_id = p_service_id;
     RETURN 1;
   EXCEPTION WHEN NO_SERVICE_ID 
               THEN error_code := 1;
-                   error_text := 'Нет записи для удаления';
+                   error_text := 'РќРµС‚ Р·Р°РїРёСЃРё РґР»СЏ СѓРґР°Р»РµРЅРёСЏ';
                    return -1;
              WHEN OTHERS 
               THEN error_code := 2;
-                   error_text := 'Ошибка '||sqlerrm;
+                   error_text := 'РћС€РёР±РєР° '||sqlerrm;
                    return -1;  
   END;
   
   FUNCTION UPSET_STUDENT(p_student_id integer default null,p_first_name VARCHAR2,p_last_name VARCHAR2,p_surname VARCHAR2,p_SERVICE_ID INTEGER default null,  error_code OUT number,  error_text OUT VARCHAR2 ) RETURN NUMBER
   IS
     cn_STUDENT number;
-    type_work  VARCHAR2(10);   --Тип работы функции insert/update
+    type_work  VARCHAR2(10);   --РўРёРї СЂР°Р±РѕС‚С‹ С„СѓРЅРєС†РёРё insert/update
     erro_code VARCHAR2(2000);
     EMPTY_PARAM EXCEPTION;
     ERROR_WRITE EXCEPTION;
     ERROR_UPDATE EXCEPTION;
   BEGIN
-  --блок проверок входящий параметров
+  --Р±Р»РѕРє РїСЂРѕРІРµСЂРѕРє РІС…РѕРґСЏС‰РёР№ РїР°СЂР°РјРµС‚СЂРѕРІ
     IF p_first_name IS NULL OR p_surname IS NULL 
           THEN RAISE EMPTY_PARAM; 
     END IF;
-  -- ОСНОВНОЙ ФУНКЦИОНАЛ
+  -- РћРЎРќРћР’РќРћР™ Р¤РЈРќРљР¦РРћРќРђР›
       IF p_student_id  IS NULL 
           THEN type_work := 'INSERT';
           ELSE SELECT COUNT(*) INTO cn_STUDENT FROM Students WHERE STUDENT_ID = p_student_id;
@@ -131,7 +131,7 @@ CREATE OR REPLACE PACKAGE BODY API AS
   
       IF type_work = 'INSERT' 
         THEN
-            -- запись
+            -- Р·Р°РїРёСЃСЊ
               BEGIN
                 INSERT INTO students (first_name,last_name,surname,SERVICE_ID) VALUES (p_first_name ,p_last_name ,p_surname,p_SERVICE_ID);
                 COMMIT;
@@ -151,19 +151,19 @@ CREATE OR REPLACE PACKAGE BODY API AS
     RETURN 1;
   EXCEPTION WHEN EMPTY_PARAM
               THEN error_code := 1;
-                   error_text := 'Не заполнены обязательные параметры';
+                   error_text := 'РќРµ Р·Р°РїРѕР»РЅРµРЅС‹ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹Рµ РїР°СЂР°РјРµС‚СЂС‹';
                    return -1;
              WHEN ERROR_WRITE
               THEN error_code := 1;
-                   error_text := 'Ошибка записи данных '||erro_code;
+                   error_text := 'РћС€РёР±РєР° Р·Р°РїРёСЃРё РґР°РЅРЅС‹С… '||erro_code;
                    return -1;
              WHEN ERROR_UPDATE
               THEN error_code := 1;
-                   error_text := 'Ошибка обновления данных '||sqlerrm;
+                   error_text := 'РћС€РёР±РєР° РѕР±РЅРѕРІР»РµРЅРёСЏ РґР°РЅРЅС‹С… '||sqlerrm;
                    return -1;        
              WHEN OTHERS 
               THEN error_code := 2;
-                   error_text := 'Ошибка '||sqlerrm;
+                   error_text := 'РћС€РёР±РєР° '||sqlerrm;
                    return -1;
   END;
   
@@ -172,36 +172,36 @@ CREATE OR REPLACE PACKAGE BODY API AS
     cnt number;
     NO_student_ID EXCEPTION;
     BEGIN
-      --блок проверок
+      --Р±Р»РѕРє РїСЂРѕРІРµСЂРѕРє
       SELECT count(*)INTO cnt FROM students where student_id = p_student_id;
       IF cnt = 0 then RAISE NO_student_ID; END IF;
-      -- Основной функционал
+      -- РћСЃРЅРѕРІРЅРѕР№ С„СѓРЅРєС†РёРѕРЅР°Р»
       DELETE FROM students WHERE  student_id = p_student_id;
       RETURN 1;
     EXCEPTION WHEN NO_student_ID 
                 THEN error_code := 1;
-                     error_text := 'Нет записи для удаления';
+                     error_text := 'РќРµС‚ Р·Р°РїРёСЃРё РґР»СЏ СѓРґР°Р»РµРЅРёСЏ';
                      return -1;
                WHEN OTHERS 
                 THEN error_code := 2;
-                     error_text := 'Ошибка '||sqlerrm;
+                     error_text := 'РћС€РёР±РєР° '||sqlerrm;
                      return -1;  
     END;
     
     FUNCTION UPSET_COURSE(p_course_id integer DEFAULT NULL,p_course_name VARCHAR2,p_Course_cost number, error_code out number, error_text OUT  VARCHAR2 ) RETURN NUMBER
   IS
     cnt number;
-    type_work  VARCHAR2(10);   --Тип работы функции insert/update
+    type_work  VARCHAR2(10);   --РўРёРї СЂР°Р±РѕС‚С‹ С„СѓРЅРєС†РёРё insert/update
     erro_code VARCHAR2(2000);
     EMPTY_PARAM EXCEPTION;
     ERROR_WRITE EXCEPTION;
     ERROR_UPDATE EXCEPTION;
   BEGIN
-  --блок проверок входящий параметров
+  --Р±Р»РѕРє РїСЂРѕРІРµСЂРѕРє РІС…РѕРґСЏС‰РёР№ РїР°СЂР°РјРµС‚СЂРѕРІ
     IF p_course_name IS NULL 
           THEN RAISE EMPTY_PARAM; 
     END IF;
-  -- ОСНОВНОЙ ФУНКЦИОНАЛ
+  -- РћРЎРќРћР’РќРћР™ Р¤РЈРќРљР¦РРћРќРђР›
       IF p_course_id  IS NULL 
           THEN type_work := 'INSERT';
           ELSE SELECT COUNT(*) INTO cnt FROM Courses WHERE Course_ID = p_course_id;
@@ -213,7 +213,7 @@ CREATE OR REPLACE PACKAGE BODY API AS
   
       IF type_work = 'INSERT' 
         THEN
-            -- запись
+            -- Р·Р°РїРёСЃСЊ
               BEGIN
                 INSERT INTO Courses (course_name ,Course_cost ) VALUES (p_course_name,p_Course_cost);
                 COMMIT;
@@ -231,19 +231,19 @@ CREATE OR REPLACE PACKAGE BODY API AS
     RETURN 1;
   EXCEPTION WHEN EMPTY_PARAM
               THEN error_code := 1;
-                   error_text := 'Не заполнены обязательные параметры';
+                   error_text := 'РќРµ Р·Р°РїРѕР»РЅРµРЅС‹ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹Рµ РїР°СЂР°РјРµС‚СЂС‹';
                    return -1;
              WHEN ERROR_WRITE
               THEN error_code := 1;
-                   error_text := 'Ошибка записи данных '||erro_code;
+                   error_text := 'РћС€РёР±РєР° Р·Р°РїРёСЃРё РґР°РЅРЅС‹С… '||erro_code;
                    return -1;
              WHEN ERROR_UPDATE
               THEN error_code := 1;
-                   error_text := 'Ошибка обновления данных '||erro_code;
+                   error_text := 'РћС€РёР±РєР° РѕР±РЅРѕРІР»РµРЅРёСЏ РґР°РЅРЅС‹С… '||erro_code;
                    return -1;        
              WHEN OTHERS 
               THEN error_code := 2;
-                   error_text := 'Ошибка '||sqlerrm;
+                   error_text := 'РћС€РёР±РєР° '||sqlerrm;
                    return -1;
   END;
   
@@ -252,29 +252,29 @@ CREATE OR REPLACE PACKAGE BODY API AS
     cnt number;
     NO_COURSE_ID EXCEPTION;
     BEGIN
-      --блок проверок
+      --Р±Р»РѕРє РїСЂРѕРІРµСЂРѕРє
       SELECT count(*)INTO cnt FROM COURSEs where COURSE_id = p_COURSE_id;
       IF cnt = 0 then RAISE NO_COURSE_ID; END IF;
-      -- Основной функционал
+      -- РћСЃРЅРѕРІРЅРѕР№ С„СѓРЅРєС†РёРѕРЅР°Р»
       DELETE FROM COURSEs WHERE  COURSE_id = p_COURSE_id;
       RETURN 1;
     EXCEPTION WHEN NO_COURSE_ID
                 THEN error_code := 1;
-                     error_text := 'Нет записи для удаления';
+                     error_text := 'РќРµС‚ Р·Р°РїРёСЃРё РґР»СЏ СѓРґР°Р»РµРЅРёСЏ';
                      return -1;
                WHEN OTHERS 
                 THEN error_code := 2;
-                     error_text := 'Ошибка '||sqlerrm;
+                     error_text := 'РћС€РёР±РєР° '||sqlerrm;
                      return -1;  
     END;
   
-  --Функция построения расписания
+  --Р¤СѓРЅРєС†РёСЏ РїРѕСЃС‚СЂРѕРµРЅРёСЏ СЂР°СЃРїРёСЃР°РЅРёСЏ
   /*
-    1. Занятия с 9.00
-    2. Не более 8 занятий в день
-    3. Занятие длится 1 час.
-    4. Занятие не пересекаются
-    5. Занятия до 18:00
+    1. Р—Р°РЅСЏС‚РёСЏ СЃ 9.00
+    2. РќРµ Р±РѕР»РµРµ 8 Р·Р°РЅСЏС‚РёР№ РІ РґРµРЅСЊ
+    3. Р—Р°РЅСЏС‚РёРµ РґР»РёС‚СЃСЏ 1 С‡Р°СЃ.
+    4. Р—Р°РЅСЏС‚РёРµ РЅРµ РїРµСЂРµСЃРµРєР°СЋС‚СЃСЏ
+    5. Р—Р°РЅСЏС‚РёСЏ РґРѕ 18:00
   */
  FUNCTION UPSET_SHEDULE(p_date date,p_student_id integer,p_course_id integer,  error_code OUT number,  error_text OUT VARCHAR2 ) RETURN NUMBER
   IS
@@ -289,23 +289,23 @@ CREATE OR REPLACE PACKAGE BODY API AS
   CROSSING EXCEPTION;
   BEGIN
   /*
-    -Если дата без времени. Заполняем расписание по умолчанию. 
+    -Р•СЃР»Рё РґР°С‚Р° Р±РµР· РІСЂРµРјРµРЅРё. Р—Р°РїРѕР»РЅСЏРµРј СЂР°СЃРїРёСЃР°РЅРёРµ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ. 
   */
-    IF to_number(to_char(p_date,'hh24')) = 0 -- Если конкретное время не указано, заполняем по дефолту
+    IF to_number(to_char(p_date,'hh24')) = 0 -- Р•СЃР»Рё РєРѕРЅРєСЂРµС‚РЅРѕРµ РІСЂРµРјСЏ РЅРµ СѓРєР°Р·Р°РЅРѕ, Р·Р°РїРѕР»РЅСЏРµРј РїРѕ РґРµС„РѕР»С‚Сѓ
       THEN 
-          -- Получаем время начала последнего урока в переданном дне
+          -- РџРѕР»СѓС‡Р°РµРј РІСЂРµРјСЏ РЅР°С‡Р°Р»Р° РїРѕСЃР»РµРґРЅРµРіРѕ СѓСЂРѕРєР° РІ РїРµСЂРµРґР°РЅРЅРѕРј РґРЅРµ
           SELECT  MAX(dat)+1/24,count(*) cn_class INTO time_lesson,cn_class FROM schedule WHERE TRUNC(dat) = TRUNC(p_date);
             IF cn_class >= 8 or time_lesson > max_time or time_lesson < min_time 
                 THEN RAISE UNLIMIT;
             END IF;
-            --если это первый урок - он начинается с 9
+            --РµСЃР»Рё СЌС‚Рѕ РїРµСЂРІС‹Р№ СѓСЂРѕРє - РѕРЅ РЅР°С‡РёРЅР°РµС‚СЃСЏ СЃ 9
           IF time_lesson IS NULL THEN time_lesson := to_date(p_date||' 09:00:00','dd.mm.rrrr hh24:mi:ss'); END IF;
            dbms_output.put_line('time_lessone = '||to_char(time_lesson,'dd.mm.rrrr hh24:mi:ss'));
           insert into schedule (dat, student_ID, course_id ) values (time_lesson,p_student_id,p_course_id );
-      ELSE --если указано конкретное время
+      ELSE --РµСЃР»Рё СѓРєР°Р·Р°РЅРѕ РєРѕРЅРєСЂРµС‚РЅРѕРµ РІСЂРµРјСЏ
      
           time_lesson := p_date;
-          --Проверяем не пересекаемся ли с другими уроками
+          --РџСЂРѕРІРµСЂСЏРµРј РЅРµ РїРµСЂРµСЃРµРєР°РµРјСЃСЏ Р»Рё СЃ РґСЂСѓРіРёРјРё СѓСЂРѕРєР°РјРё
           SELECT MAX(DAT)+1/24 into Last_lesson_time FROM schedule WHERE TRUNC(DAT) = TRUNC(P_DATe) AND DAT <= P_DATe;
           SELECT MIN(DAT)-1/24 into Next_lesson_time FROM schedule WHERE TRUNC(DAT) = TRUNC(P_DATe) AND DAT >= P_DATe;
            IF  time_lesson > max_time or time_lesson < min_time 
@@ -314,7 +314,7 @@ CREATE OR REPLACE PACKAGE BODY API AS
           IF (time_lesson < Last_lesson_time and Last_lesson_time is not null) or (time_lesson > Next_lesson_time and Next_lesson_time is not null)
               THEN RAISE CROSSING;
           END IF;
-          -- Это новая запись или редактированеи строй
+          -- Р­С‚Рѕ РЅРѕРІР°СЏ Р·Р°РїРёСЃСЊ РёР»Рё СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРµРё СЃС‚СЂРѕР№
           SELECT COUNT(*) into cn_class  FROM schedule WHERE dat = time_lesson;
           IF cn_class = 0 
             THEN  insert into schedule (dat, student_ID, course_id ) values (time_lesson,p_student_id,p_course_id ); 
@@ -325,10 +325,10 @@ CREATE OR REPLACE PACKAGE BODY API AS
      END IF;
      RETURN 1;
      EXCEPTION WHEN UNLIMIT THEN error_code := 1;
-                                 error_text := 'Превышено количество уроков или время окончания';
+                                 error_text := 'РџСЂРµРІС‹С€РµРЅРѕ РєРѕР»РёС‡РµСЃС‚РІРѕ СѓСЂРѕРєРѕРІ РёР»Рё РІСЂРµРјСЏ РѕРєРѕРЅС‡Р°РЅРёСЏ';
                                  return -1;
                WHEN CROSSING THEN error_code := 1;
-                                 error_text := 'Пересечение уроков '||Last_lesson_time||'  '||Next_lesson_time;
+                                 error_text := 'РџРµСЂРµСЃРµС‡РµРЅРёРµ СѓСЂРѕРєРѕРІ '||Last_lesson_time||'  '||Next_lesson_time;
                                  return -1;                  
   END;
   
@@ -338,19 +338,19 @@ CREATE OR REPLACE PACKAGE BODY API AS
     NO_COURSE_ID EXCEPTION;
     BEGIN
    
-      --блок проверок
+      --Р±Р»РѕРє РїСЂРѕРІРµСЂРѕРє
       SELECT count(*)INTO cnt FROM schedule where DAT = P_DATe;
       IF cnt = 0 then RAISE NO_COURSE_ID; END IF;
-      -- Основной функционал
+      -- РћСЃРЅРѕРІРЅРѕР№ С„СѓРЅРєС†РёРѕРЅР°Р»
       DELETE FROM schedule WHERE  DAT = P_DATe;
      RETURN 1;
     EXCEPTION WHEN NO_COURSE_ID
                 THEN error_code := 1;
-                     error_text := 'Нет записи для удаления';
+                     error_text := 'РќРµС‚ Р·Р°РїРёСЃРё РґР»СЏ СѓРґР°Р»РµРЅРёСЏ';
                      return -1;
                WHEN OTHERS 
                 THEN error_code := 2;
-                     error_text := 'Ошибка '||sqlerrm;
+                     error_text := 'РћС€РёР±РєР° '||sqlerrm;
                      return -1;  
     END;
 END;
